@@ -17,12 +17,7 @@ custom:
     - X-Amz-User-Agent
     - app_user_id
     - app_user_name
-  customDomain:
-    domainName: api.apiservice.live
-    basePath: 'v1'
-    stage: ${self:provider.stage}
-    certificateName: apiservice.live
-    createRoute53Record: true
+
 
 provider:
   name: aws
