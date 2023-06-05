@@ -1,5 +1,5 @@
-service: sls-notes-backend 
-frameworkVersion: "3"
+service: sls-notes-backend
+frameworkVersion: '3'
 
 plugins:
   - serverless-offline
@@ -17,19 +17,19 @@ custom:
     - X-Amz-User-Agent
     - app_user_id
     - app_user_name
-  customDomain: 
+  customDomain:
     domainName: api.apiservice.live
     basePath: 'v1'
     stage: ${self:provider.stage}
     certificateName: apiservice.live
-    createRoute53Record: true 
+    createRoute53Record: true
 
 provider:
   name: aws
   runtime: nodejs18.x
   region: ca-central-1
   stage: prod
-  memorySize: 128 
+  memorySize: 128
   timeout: 10
   endpointType: regional
   environment:
@@ -38,11 +38,11 @@ provider:
     REGION: ca-central-1
   iamRoleStatements:
     - Effect: Allow
-      Action: 
+      Action:
         - dynamodb:Query
         - dynamodb:PutItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${self:provider.environment.REGION}:*:table/${self:provider.environment.NOTES_TABLE}"
+      Resource: 'arn:aws:dynamodb:${self:provider.environment.REGION}:*:table/${self:provider.environment.NOTES_TABLE}'
 
 functions:
   authenticate-google:
@@ -113,7 +113,7 @@ functions:
           authorizer: aws_iam
           cors:
             origin: '*'
-            headers: ${self:custom.allowedHeaders} 
+            headers: ${self:custom.allowedHeaders}
 
 resources:
   Resources:
@@ -156,5 +156,3 @@ resources:
         ResponseType: DEFAULT_4XX
         RestApiId:
           Ref: 'ApiGatewayRestApi'
-
-
