@@ -86,7 +86,6 @@ functions:
       - http:
           path: notes
           method: get
-          authorizer: aws_iam
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
