@@ -20,7 +20,7 @@ exports.handler = async (event) => {
         item.note_id = item.user_id + ':' + uuidv4()
         item.timestamp =  getTimeStamp()
         item.expires = getExpireTimeStamp()
-        console.log('step1')
+       
          await dynamodb.put({
             TableName: tableName,
             Item: item

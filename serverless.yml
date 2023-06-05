@@ -1,6 +1,6 @@
 service: sls-notes-backend
 configValidationMode: error
-frameworkVersion: '3'
+frameworkVersion: '3.32'
 
 plugins:
   - serverless-offline
@@ -24,8 +24,7 @@ custom:
     basePath: 'v1'
     certificateName: apiservice.live
     createRoute53Record: true
-    certificateArn: 'arn:aws:acm:us-east-1:681206886478:certificate/124eb014-e950-436b-96eb-2cbc6fbd5ae3'
-
+ 
 provider:
   name: aws
   runtime: nodejs18.x
