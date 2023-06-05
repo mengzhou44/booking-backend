@@ -20,10 +20,11 @@ custom:
     - app_user_name
   customDomain:
     domainName: api.apiservice.live
-    basePath: 'v1'
     stage: ${self:provider.stage}
+    basePath: 'v1'
     certificateName: apiservice.live
     createRoute53Record: true
+    certificateArn: 'arn:aws:acm:us-east-1:681206886478:certificate/124eb014-e950-436b-96eb-2cbc6fbd5ae3'
 
 provider:
   name: aws
@@ -47,9 +48,10 @@ provider:
           - dynamodb:DeleteItem
          Resource: 'arn:aws:dynamodb:${self:provider.environment.REGION}:*:table/${self:provider.environment.NOTES_TABLE}'
        - Effect: Allow
-         Action:
-          - cloudfront:updateDistribution
+         Action:      
+          - cloudfront:UpdateDistribution         
          Resource: '*'
+
 functions:
   authenticate-google:
     handler: api/authenticate-google.handler
