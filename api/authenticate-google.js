@@ -18,6 +18,7 @@ exports.handler = async (event) => {
         console.log({id_token})
         console.log('step1')
         let params = {
+            AccountId: '681206886478',
             IdentityPoolId: identityPoolId,
             Logins: {
                 'accounts.google.com': id_token
