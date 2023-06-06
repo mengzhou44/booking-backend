@@ -13,8 +13,10 @@ const identityPoolId = process.env.COGNITO_IDENTITY_POOL_ID;
 
 exports.handler = async (event) => {
     try {
+        console.log({headers: event.headers})
         let id_token = util.getIdToken(event.headers);
-
+        console.log({id_token})
+        console.log('step1')
         let params = {
             IdentityPoolId: identityPoolId,
             Logins: {
@@ -23,6 +25,7 @@ exports.handler = async (event) => {
         };
 
         let data = await cognitoidentity.getId(params).promise();
+        console.log('step2')
 
         params = {
             IdentityId: data.IdentityId,
@@ -32,8 +35,10 @@ exports.handler = async (event) => {
         };
 
         data = await cognitoidentity.getCredentialsForIdentity(params).promise();
+        console.log('step3')
         let decoded = jwtDecode(id_token);
         data.user_name = decoded.name;
+        console.log('step4)')
        
         return {
             statusCode: 200,
