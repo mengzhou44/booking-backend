@@ -24,7 +24,6 @@ const getIdToken = (headers) => {
     return headers.Authorization;
 }
 
-
 const getResponseHeaders = () => {
     return {
         'Access-Control-Allow-Origin': '*'

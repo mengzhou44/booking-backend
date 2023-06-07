@@ -12,9 +12,12 @@ const tableName = process.env.NOTES_TABLE;
 
 exports.handler = async (event, context) => {
     try {
+        console.log('get-notes event')
+        console.log('step1')
         let query = event.queryStringParameters;
         let limit = query && query.limit ? parseInt(query.limit) : 5;
         let user_id = util.getUserId(context);
+        console.log({user_id})
 
         let params = {
             TableName: tableName,
