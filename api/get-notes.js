@@ -10,11 +10,11 @@ const util = require('./util');
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.NOTES_TABLE;
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
     try {
         let query = event.queryStringParameters;
         let limit = query && query.limit ? parseInt(query.limit) : 5;
-        let user_id = util.getUserId(event.headers);
+        let user_id = util.getUserId(context);
 
         let params = {
             TableName: tableName,

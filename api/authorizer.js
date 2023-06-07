@@ -14,8 +14,13 @@ exports.handler = async (event) => {
       audience: CLIENT_ID,
     });
     
-    ticket.getPayload();
-    return  generateAuthResponse(principalId, 'Allow');
+    const {sub, name} = ticket.getPayload();
+    return  { ...generateAuthResponse(principalId, 'Allow'), 
+          context: {
+             app_user_id: sub,
+             app_user_name: name
+          }
+    }
    
   } catch (error) {
     console.error('Error validating Google ID token:', error); 
@@ -41,7 +46,7 @@ function generateAuthResponse(principalId, effect) {
           }
         },
       ],
-    },
+    } 
   };
 }
  

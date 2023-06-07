@@ -10,13 +10,13 @@ const util = require('./util');
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.NOTES_TABLE;
 
-exports.handler = async (event) => {
+exports.handler = async (event,context) => {
     try {
         let timestamp = parseInt(event.pathParameters.timestamp);
         let params = {
             TableName: tableName,
             Key: {
-                user_id: util.getUserId(event.headers),
+                user_id: util.getUserId(context),
                 timestamp: timestamp
             }
         };

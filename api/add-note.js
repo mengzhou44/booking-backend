@@ -12,11 +12,11 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.NOTES_TABLE;
 console.log({tableName})
 
-exports.handler = async (event) => {
+exports.handler = async (event,context) => {
     try {
         let item = JSON.parse(event.body).Item;
-        item.user_id = getUserId(event.headers);
-        item.user_name = getUserName(event.headers);
+        item.user_id = getUserId(context);
+        item.user_name = getUserName(context);
         item.note_id = item.user_id + ':' + uuidv4()
         item.timestamp =  getTimeStamp()
         item.expires = getExpireTimeStamp()

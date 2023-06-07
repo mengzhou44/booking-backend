@@ -9,11 +9,11 @@ const util = require('./util');
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.NOTES_TABLE;
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
     try {
         let item = JSON.parse(event.body).Item;
-        item.user_id = util.getUserId(event.headers);
-        item.user_name = util.getUserName(event.headers);
+        item.user_id = util.getUserId(context);
+        item.user_name = util.getUserName(context);
         item.expires = util.getExpireTimeStamp()
 
         await dynamodb.put({
