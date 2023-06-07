@@ -6,7 +6,8 @@ const client = new OAuth2Client(CLIENT_ID);
 
 exports.handler = async (event) => {
   console.log({event})
-  const token = event.headers.Authorization
+  const token = event.authorizationToken
+  const methodArn = event.methodArn
   const principalId = event.requestContext.authorizer.principalId;
 
   try {
@@ -20,7 +21,7 @@ exports.handler = async (event) => {
      
     console.log('step3')
     console.log({sub, name})
-     return  { ...generateAuthResponse(principalId, 'Allow'), 
+     return  { ...generateAuthResponse(principalId, 'Allow', methodArn), 
           context: {
              app_user_id: sub,
              app_user_name: name
@@ -29,11 +30,11 @@ exports.handler = async (event) => {
    
   } catch (error) {
     console.error('Error validating Google ID token:', error); 
-    return generateAuthResponse(principalId, 'Deny');
+    return generateAuthResponse(principalId, 'Deny', methodArn);
   }
 };
 
-function generateAuthResponse(principalId, effect) {
+function generateAuthResponse(principalId, effect, methodArn) {
   return  {
     principalId,
     policyDocument: {
@@ -42,13 +43,7 @@ function generateAuthResponse(principalId, effect) {
         {
           Action: 'execute-api:Invoke',
           Effect: effect,
-          Resource: resource,
-          Condition: {
-            StringEquals: {
-              'aws:Region': process.env.REGION,
-              'aws:AccountId': process.env.ACCOUNT_ID
-            }
-          }
+          Resource: methodArn
         },
       ],
     } 
