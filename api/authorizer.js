@@ -21,7 +21,7 @@ exports.handler = async (event) => {
      
     console.log('step3')
     console.log({sub, name})
-     return  { ...generateAuthResponse(principalId, 'Allow', methodArn), 
+    return  { ...generateAuthResponse(principalId, 'Allow', methodArn), 
           context: {
              app_user_id: sub,
              app_user_name: name

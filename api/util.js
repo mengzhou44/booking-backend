@@ -12,12 +12,12 @@ const getExpireTimeStamp = () => {
   return date.toMillis()
 }
 
-const getUserId = (context) => {
-    return context.app_user_id;
+const getUserId = (event) => {
+    return event.requestContext.authorizer.context.app_user_id
 }
 
-const getUserName = (context) => {
-    return context.app_user_name;
+const getUserName = (event) => {
+    return event.requestContext.authorizer.context.app_user_name;
 }
 
 const getIdToken = (headers) => {
