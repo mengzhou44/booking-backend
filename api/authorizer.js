@@ -8,7 +8,7 @@ exports.handler = async (event) => {
   console.log({event})
   const token = event.authorizationToken
   const methodArn = event.methodArn
-  const principalId = event.requestContext.authorizer.principalId;
+  const principalId ='user'  
 
   try {
     console.log('step1')
