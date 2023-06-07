@@ -11,16 +11,15 @@ exports.handler = async (event) => {
   const principalId ='user'  
 
   try {
-    console.log('step1')
+   
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: CLIENT_ID,
     });
-    console.log('step2')
+  
     const {sub, name} = ticket.getPayload();
      
-    console.log('step3')
-    console.log({sub, name})
+    
     return  { ...generateAuthResponse(principalId, 'Allow', methodArn), 
           context: {
              app_user_id: sub,

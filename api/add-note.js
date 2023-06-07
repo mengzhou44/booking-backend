@@ -10,7 +10,7 @@ const {getTimeStamp, getExpireTimeStamp,getUserId, getUserName, getResponseHeade
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.NOTES_TABLE;
-console.log({tableName})
+ 
 
 exports.handler = async (event) => {
     try {
@@ -37,8 +37,7 @@ exports.handler = async (event) => {
             statusCode: err.statusCode ? err.statusCode : 500,
             headers: getResponseHeaders(),
             body: JSON.stringify({
-                error: err.name ? err.name : "Exception",
-                message: err.message ? err.message : "Unknown error"
+                error:  err.message ? err.message : "Unknown error"
             })
         };
     }

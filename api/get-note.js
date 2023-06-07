@@ -44,8 +44,7 @@ exports.handler = async (event) => {
             statusCode: err.statusCode ? err.statusCode : 500,
             headers: util.getResponseHeaders(),
             body: JSON.stringify({
-                error: err.name ? err.name : "Exception",
-                message: err.message ? err.message : "Unknown error"
+                 error: err.message ? err.message : "Unknown error"
             })
         };
     }
