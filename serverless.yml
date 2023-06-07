@@ -62,7 +62,8 @@ functions:
       - http:
           path: note
           method: post
-          authorizer: ${self:functions.authorizer}
+          authorizer: 
+            name: authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
@@ -74,11 +75,11 @@ functions:
       - http:
           path: note
           method: patch
-          authorizer:  ${self:functions.authorizer}
+          authorizer: 
+            name: authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
-
   get-notes:
     handler: api/get-notes.handler
     description: GET /notes
@@ -86,7 +87,8 @@ functions:
       - http:
           path: notes
           method: get
-          authorizer:  ${self:functions.authorizer}
+          authorizer: 
+            name: authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
@@ -98,7 +100,8 @@ functions:
       - http:
           path: note/n/{note_id}
           method: get
-          authorizer:  ${self:functions.authorizer}
+          authorizer: 
+            name: authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
@@ -110,7 +113,8 @@ functions:
       - http:
           path: note/t/{timestamp}
           method: delete
-          authorizer:  ${self:functions.authorizer}
+          authorizer: 
+            name: authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
