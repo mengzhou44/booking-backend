@@ -13,11 +13,11 @@ const getExpireTimeStamp = () => {
 }
 
 const getUserId = (event) => {
-    return event.requestContext.authorizer.context.app_user_id
+    return event.requestContext.authorizer.app_user_id
 }
 
 const getUserName = (event) => {
-    return event.requestContext.authorizer.context.app_user_name;
+    return event.requestContext.authorizer.app_user_name;
 }
 
 const getIdToken = (headers) => {
