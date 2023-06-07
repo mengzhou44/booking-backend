@@ -63,7 +63,7 @@ functions:
           path: note
           method: post
           authorizer: 
-            arn: 'arn:aws:lambda:${self:provider.environment.REGION}:${self:provider.environment.ACCOUNT_ID}:function:authorizer'
+            name: authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
@@ -76,7 +76,7 @@ functions:
           path: note
           method: patch
           authorizer: 
-            arn: 'arn:aws:lambda:${self:provider.environment.REGION}:${self:provider.environment.ACCOUNT_ID}:function:authorizer'
+            name: authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
@@ -88,7 +88,7 @@ functions:
           path: notes
           method: get
           authorizer: 
-            arn: 'arn:aws:lambda:${self:provider.environment.REGION}:${self:provider.environment.ACCOUNT_ID}:function:authorizer'
+            name: authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
@@ -101,7 +101,7 @@ functions:
           path: note/n/{note_id}
           method: get
           authorizer: 
-            arn: 'arn:aws:lambda:${self:provider.environment.REGION}:${self:provider.environment.ACCOUNT_ID}:function:authorizer'
+            name: authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
@@ -114,7 +114,7 @@ functions:
           path: note/t/{timestamp}
           method: delete
           authorizer: 
-            arn: 'arn:aws:lambda:${self:provider.environment.REGION}:${self:provider.environment.ACCOUNT_ID}:function:authorizer'
+            name: authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
