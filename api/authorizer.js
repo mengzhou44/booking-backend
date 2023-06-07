@@ -5,7 +5,7 @@ const CLIENT_ID = '447327976245-3f5fmcheuj84mkb9i36hf7dhsa619fuf.apps.googleuser
 const client = new OAuth2Client(CLIENT_ID);
 
 exports.handler = async (event) => {
-  const token = getTokenFromEvent(event); // Implement this function to extract the token from the event
+  const token = event.headers.Authorization
   const principalId = event.requestContext.authorizer.principalId;
 
   try {
