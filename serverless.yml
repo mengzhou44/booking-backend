@@ -35,8 +35,8 @@ provider:
   endpointType: regional
   environment:
     NOTES_TABLE: ${self:service}-${opt:stage, self:provider.stage}
-    COGNITO_IDENTITY_POOL_ID: ca-central-1:90fc3863-ec52-4bd4-81db-5b806e5f272d
     REGION: ca-central-1
+    ACCOUNT_ID: 681206886478
   iam:
     role:
       statements:
@@ -52,16 +52,9 @@ provider:
          Resource: '*'
 
 functions:
-  authenticate-google:
-    handler: api/authenticate-google.handler
-    description: Google IDP Authentication
-    events:
-      - http:
-          path: auth
-          method: get
-          cors:
-            origin: '*'
-            headers: ${self:custom.allowedHeaders}
+  authorizer:
+    handler: api/authorizer.handler
+    description: Authorize google users
   add-note:
     handler: api/add-note.handler
     description: POST /note
@@ -69,7 +62,7 @@ functions:
       - http:
           path: note
           method: post
-          authorizer: aws_iam
+          authorizer: !Ref authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
@@ -81,7 +74,7 @@ functions:
       - http:
           path: note
           method: patch
-          authorizer: aws_iam
+          authorizer: !Ref authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
@@ -93,7 +86,7 @@ functions:
       - http:
           path: notes
           method: get
-          authorizer: aws_iam
+          authorizer: !Ref authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
@@ -105,7 +98,7 @@ functions:
       - http:
           path: note/n/{note_id}
           method: get
-          authorizer: aws_iam
+          authorizer: !Ref authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
@@ -117,7 +110,7 @@ functions:
       - http:
           path: note/t/{timestamp}
           method: delete
-          authorizer: aws_iam
+          authorizer: !Ref authorizer
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
