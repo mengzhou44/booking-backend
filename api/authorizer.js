@@ -5,17 +5,22 @@ const CLIENT_ID = '447327976245-3f5fmcheuj84mkb9i36hf7dhsa619fuf.apps.googleuser
 const client = new OAuth2Client(CLIENT_ID);
 
 exports.handler = async (event) => {
+  console.log({event})
   const token = event.headers.Authorization
   const principalId = event.requestContext.authorizer.principalId;
 
   try {
+    console.log('step1')
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: CLIENT_ID,
     });
-    
+    console.log('step2')
     const {sub, name} = ticket.getPayload();
-    return  { ...generateAuthResponse(principalId, 'Allow'), 
+     
+    console.log('step3')
+    console.log({sub, name})
+     return  { ...generateAuthResponse(principalId, 'Allow'), 
           context: {
              app_user_id: sub,
              app_user_name: name
