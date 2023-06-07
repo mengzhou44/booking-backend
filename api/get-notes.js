@@ -13,7 +13,7 @@ const tableName = process.env.NOTES_TABLE;
 exports.handler = async (event) => {
     try {
         console.log('step1')
-        console.log(event.requestContext.authorizer.context)
+        console.log(JSON.stringify(event, null, 4))
 
         let query = event.queryStringParameters;
         let limit = query && query.limit ? parseInt(query.limit) : 5;
