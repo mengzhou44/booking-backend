@@ -3,6 +3,7 @@
  */
 const { generateToken } = require('./util')
 const { Magic } = require('@magic-sdk/admin')
+const util = require('./util')
 
 const AWS = require('aws-sdk')
 AWS.config.update({ region: process.env.REGION })

@@ -154,6 +154,8 @@ resources:
         AttributeDefinitions:
           - AttributeName: user_id
             AttributeType: S
+          - AttributeName: email
+            AttributeType: S
         KeySchema:
           - AttributeName: user_id
             KeyType: HASH
