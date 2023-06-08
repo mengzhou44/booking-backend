@@ -31,9 +31,9 @@ exports.handler = async (event) => {
       user_name: item.user_name,
       user_id: item.user_id,
       email,
-      token: generateToken({ user_id, user_name: item.name, email }),
+      token: generateToken({ user_id: item.user_id, user_name: item.name, email }),
     }
-    
+
   } catch (err) {
     console.log('Error', err)
     return {
