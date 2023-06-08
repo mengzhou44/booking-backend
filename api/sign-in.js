@@ -10,7 +10,7 @@ AWS.config.update({ region: process.env.REGION })
 const magicAdmin = new Magic(process.env.MAGIC_SECRET_KEY)
 
 const dynamodb = new AWS.DynamoDB.DocumentClient()
-const tableName = process.env.NOTES_TABLE
+const tableName = process.env.USERS_TABLE
 
 exports.handler = async (event) => {
   try {
@@ -24,7 +24,7 @@ exports.handler = async (event) => {
     if (didTokenMetadata.email !== email) {
       throw new Error('Sign in failed - Invalid email.')
     }
-    const item = getRecordByEmail(email)
+    const item = getUserByEmail(email)
 
     res.send({
       name: item.name,
@@ -44,7 +44,7 @@ exports.handler = async (event) => {
   }
 }
 
-async function getRecordByEmail(email) {
+async function getUserByEmail(email) {
   const params = {
     TableName: tableName,
     Key: {

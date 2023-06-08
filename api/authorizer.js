@@ -12,6 +12,11 @@ exports.handler = async (event) => {
     if (!user_id  || !user_name || !email) {
          throw new Error('invlaid token!')
     }
+    const found = await getUserByEmail(email)
+
+    if (found === null || found.user_id!== user_id || found.user_name!== user_name) {
+         throw new Error('invalid token!')
+    }
     return  { ...generateAuthResponse(principalId, 'Allow', methodArn), 
           context: {
              app_user_id: user_id,
@@ -25,6 +30,27 @@ exports.handler = async (event) => {
     return generateAuthResponse(principalId, 'Deny', methodArn);
   }
 };
+
+async function getUserByEmail(email) {
+    const params = {
+      TableName: tableName,
+      Key: {
+        email: email,
+      },
+    }
+  
+    try {
+      const data = await dynamodb.get(params).promise()
+      if (data.Item) {
+        return data.Item
+      } else {
+        throw new Error('Sign in failed: Please sign up first')
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+  
 
  
  

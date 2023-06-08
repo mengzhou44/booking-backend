@@ -34,7 +34,8 @@ provider:
   timeout: 10
   endpointType: regional
   environment:
-    NOTES_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    NOTES_TABLE: ${self:service}-notes-${opt:stage, self:provider.stage}
+    USERS_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
     REGION: ca-central-1
     ACCOUNT_ID: 681206886478
     MAGIC_SECRET_KEY: sk_live_996CF8DA2DCB8FE0
@@ -143,6 +144,24 @@ functions:
 
 resources:
   Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:provider.environment.USERS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: user_id
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+          - AttributeName: name
+            AttributeType: S
+        KeySchema:
+          - AttributeName: user_id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
     NotesTable:
       Type: AWS::DynamoDB::Table
       DeletionPolicy: Retain

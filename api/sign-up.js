@@ -8,7 +8,7 @@ const AWS = require('aws-sdk');
 AWS.config.update({ region:  process.env.REGION});
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
-const tableName = process.env.NOTES_TABLE;
+const tableName = process.env.USERS_TABLE;
 
 const magicAdmin = new Magic(process.env.MAGIC_SECRET_KEY)
 
@@ -32,12 +32,23 @@ exports.handler = async (event) => {
           throw new Error('Sign up failed, invalid token or email')
         }
     
-        let user_id = uuid();
+        let item =  {
+            user_id: uuid(),
+            email, 
+            user_name: name
+        }
+        
+         await dynamodb.put({
+            TableName: tableName,
+            Item: item
+        }).promise();
+
+
         return {
             user_id,
             name,
             email,
-            token: generateToken({user_id, name, email}),
+            token: generateToken(item),
         }
        
     } catch (err) {
