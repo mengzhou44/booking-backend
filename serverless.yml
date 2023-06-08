@@ -48,9 +48,13 @@ provider:
           - dynamodb:Query
           - dynamodb:PutItem
           - dynamodb:DeleteItem
-         Resource: 
-          - arn:aws:dynamodb:${self:provider.environment.REGION}:*:table/${self:provider.environment.NOTES_TABLE}
-          - arn:aws:dynamodb:${self:provider.environment.REGION}:*:table/${self:provider.environment.USERS_TABLE} 
+         Resource: 'arn:aws:dynamodb:${self:provider.environment.REGION}:*:table/${self:provider.environment.NOTES_TABLE}'
+       - Effect: Allow
+         Action:
+          - dynamodb:Query
+          - dynamodb:PutItem
+          - dynamodb:DeleteItem
+         Resource: 'arn:aws:dynamodb:${self:provider.environment.REGION}:*:table/${self:provider.environment.USERS_TABLE}'    
        - Effect: Allow
          Action:      
           - cloudfront:UpdateDistribution         
