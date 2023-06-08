@@ -32,7 +32,7 @@ const getResponseHeaders = () => {
   }
 }
 
-export const generateToken = ( {user_id, user_name} )=> {
+const generateToken = ( {user_id, user_name} )=> {
     return jwt.sign({user_id, user_name}, process.env.JWT_SECRET)
 }
 
