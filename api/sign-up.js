@@ -44,11 +44,8 @@ exports.handler = async (event) => {
             Item: item
         }).promise();
 
-
         return {
-            user_id,
-            user_name,
-            email,
+            ...item,
             token: generateToken(item),
         }
        
