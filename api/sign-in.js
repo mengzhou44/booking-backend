@@ -28,12 +28,13 @@ exports.handler = async (event) => {
     const item = getUserByEmail(email)
 
     return {
-      user_name: item.user_name,
-      user_id: item.user_id,
-      email,
-      token: generateToken({ user_id: item.user_id, user_name: item.name, email }),
+      statusCode: 200,
+      headers: util.getResponseHeaders(),
+      body: JSON.stringify({
+        ...item,
+        token: generateToken(item),
+      }),
     }
-
   } catch (err) {
     console.log('Error', err)
     return {
@@ -49,7 +50,7 @@ exports.handler = async (event) => {
 async function getUserByEmail(email) {
   const params = {
     TableName: tableName,
-    IndexName: "email-index",
+    IndexName: 'email-index',
     Key: {
       email: email,
     },
