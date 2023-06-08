@@ -1,3 +1,6 @@
+const   jwt  = require('jsonwebtoken')
+
+
 exports.handler = async (event) => {
   const token = event.authorizationToken
   const methodArn = event.methodArn

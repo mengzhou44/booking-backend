@@ -1,7 +1,6 @@
 /**
  * Route: POST /signin
  */
-const { generateToken } = require('./util')
 const { Magic } = require('@magic-sdk/admin')
 const util = require('./util')
 
