@@ -1,7 +1,7 @@
 /**
  * Route: POST /signup
  */
-const { v4: uuid } = require('uuid');
+const { v4: uuidv4}  = require('uuid');
 const { Magic } = require('@magic-sdk/admin')
 
 const AWS = require('aws-sdk');
@@ -33,7 +33,7 @@ exports.handler = async (event) => {
         }
     
         let item =  {
-            user_id: uuid(),
+            user_id: uuidv4(),
             email, 
             user_name: name
         }
@@ -46,13 +46,13 @@ exports.handler = async (event) => {
 
         return {
             user_id,
-            name,
+            user_name,
             email,
             token: generateToken(item),
         }
        
     } catch (err) {
-        console.log("Error", err);
+
         return {
             statusCode: err.statusCode ? err.statusCode : 500,
             headers: util.getResponseHeaders(),
