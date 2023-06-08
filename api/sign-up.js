@@ -2,6 +2,7 @@
  * Route: POST /signup
  */
 const { v4: uuid } = require('uuid');
+const { Magic } = require('@magic-sdk/admin')
 
 const AWS = require('aws-sdk');
 AWS.config.update({ region:  process.env.REGION});
@@ -36,7 +37,7 @@ exports.handler = async (event) => {
             user_id,
             name,
             email,
-            token: generateToken({user_id, name}),
+            token: generateToken({user_id, name, email}),
         }
        
     } catch (err) {

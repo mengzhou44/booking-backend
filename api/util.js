@@ -21,9 +21,10 @@ const getUserName = (event) => {
   return event.requestContext.authorizer.app_user_name
 }
 
-const getToken = (headers) => {
-  return headers.Authorization
+const getUserEmail = (event) => {
+  return event.requestContext.authorizer.email
 }
+
 
 const getResponseHeaders = () => {
   return {
@@ -39,7 +40,7 @@ module.exports = {
   getTimeStamp,
   getExpireTimeStamp,
   getUserId,
-  getToken: 
+  getUserEmail, 
   getUserName,
   getResponseHeaders,
   generateToken
