@@ -69,9 +69,11 @@ async function getUserByEmail(email) {
   const params = {
     TableName: tableName,
     IndexName: 'email-index',
-    Key: {
-      email: email,
+    KeyConditionExpression: "email= :email",
+    ExpressionAttributeValues: {
+        ":email": email
     },
+    Limit: 1
   }
 
   try {
