@@ -32,8 +32,8 @@ const getResponseHeaders = () => {
   }
 }
 
-const generateToken = ( {user_id, user_name} )=> {
-    return jwt.sign({user_id, user_name}, process.env.JWT_SECRET)
+const generateToken = ( {user_id, user_name, email } )=> {
+    return jwt.sign({user_id, user_name, email }, process.env.JWT_SECRET)
 }
 
 module.exports = {
