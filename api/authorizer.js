@@ -49,6 +49,22 @@ exports.handler = async (event) => {
   }
 }
 
+function generateAuthResponse(principalId, effect, methodArn) {
+  return {
+    principalId,
+    policyDocument: {
+      Version: '2012-10-17',
+      Statement: [
+        {
+          Action: 'execute-api:Invoke',
+          Effect: effect,
+          Resource: methodArn,
+        },
+      ],
+    },
+  }
+}
+
 async function getUserByEmail(email) {
   const params = {
     TableName: tableName,

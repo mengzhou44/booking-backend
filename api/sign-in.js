@@ -24,7 +24,7 @@ exports.handler = async (event) => {
     if (didTokenMetadata.email !== email) {
       throw new Error('Sign in failed - Invalid email.')
     }
-    const item = getUserByEmail(email)
+    const item = await getUserByEmail(email)
 
     return {
       statusCode: 200,
@@ -57,7 +57,7 @@ async function getUserByEmail(email) {
 
   try {
     const data = await dynamodb.get(params).promise()
-    
+
     if (data.Item) {
       return data.Item
     } else {
