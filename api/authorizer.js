@@ -41,6 +41,7 @@ exports.handler = async (event) => {
         email,
       }
     }
+    console.log('step1')
     console.log({result})
     return result; 
 
