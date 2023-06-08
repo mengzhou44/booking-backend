@@ -151,7 +151,7 @@ resources:
         TableName: ${self:provider.environment.USERS_TABLE}
         AttributeDefinitions:
           - AttributeName: user_id
-            AttributeType: N
+            AttributeType: S
           - AttributeName: email
             AttributeType: S
           - AttributeName: name
@@ -162,6 +162,7 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+
     NotesTable:
       Type: AWS::DynamoDB::Table
       DeletionPolicy: Retain
