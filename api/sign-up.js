@@ -67,6 +67,7 @@ exports.handler = async (event) => {
 async function checkEmailExists(email) {
     const params = {
       TableName: tableName,
+      IndexName: "email-index",
       KeyConditionExpression: 'email = :email',
       ExpressionAttributeValues: {
         ':email': email

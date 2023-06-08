@@ -48,6 +48,7 @@ exports.handler = async (event) => {
 async function getUserByEmail(email) {
   const params = {
     TableName: tableName,
+    IndexName: "email-index",
     Key: {
       email: email,
     },
