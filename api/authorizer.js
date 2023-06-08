@@ -77,9 +77,9 @@ async function getUserByEmail(email) {
   }
 
   try {
-    const data = await dynamodb.get(params).promise()
-    if (data.Item) {
-      return data.Item
+    const data = await dynamodb.query(params).promise()
+    if (data.Items.length ===1) {
+      return data.Items[0]
     } else {
       throw new Error('Sign in failed: Please sign up first')
     }

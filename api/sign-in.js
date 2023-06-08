@@ -50,17 +50,18 @@ async function getUserByEmail(email) {
   const params = {
     TableName: tableName,
     IndexName: 'email-index',
-    KeyConditionExpression: 'email = :email',
+    KeyConditionExpression: "email= :email",
     ExpressionAttributeValues: {
-      ':email': email,
+        ":email": email
     },
+    Limit: 1
   }
 
   try {
-    const data = await dynamodb.get(params).promise()
+    const data = await dynamodb.query(params).promise()
 
-    if (data.Item) {
-      return data.Item
+    if (data.Items.length === 1) {
+      return data.Items[0]
     } else {
       throw new Error('Sign in failed: Please sign up first')
     }
