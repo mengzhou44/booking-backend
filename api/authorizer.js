@@ -1,5 +1,9 @@
-const   jwt  = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
+const AWS = require('aws-sdk')
+AWS.config.update({ region: process.env.REGION })
 
+const dynamodb = new AWS.DynamoDB.DocumentClient()
+const tableName = process.env.USERS_TABLE
 
 exports.handler = async (event) => {
   const token = event.authorizationToken
@@ -12,16 +16,16 @@ exports.handler = async (event) => {
       token,
       process.env.JWT_SECRET
     )
-   
+
     console.log('step1')
-    console.log({user_name, user_id, email})
+    console.log({ user_name, user_id, email })
 
     if (!user_id || !user_name || !email) {
       throw new Error('invlaid token!')
     }
     console.log('step2')
     const found = await getUserByEmail(email)
-    console.log({found})
+    console.log({ found })
     if (
       found === null ||
       found.user_id !== user_id ||
