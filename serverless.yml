@@ -149,13 +149,6 @@ resources:
       DeletionPolicy: Retain
       Properties:
         TableName: ${self:provider.environment.USERS_TABLE}
-        AttributeDefinitions:
-          - AttributeName: user_id
-            AttributeType: S
-          - AttributeName: email
-            AttributeType: S
-          - AttributeName: name
-            AttributeType: S
         KeySchema:
           - AttributeName: user_id
             KeyType: HASH
