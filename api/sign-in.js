@@ -32,7 +32,7 @@ exports.handler = async (event) => {
       headers: util.getResponseHeaders(),
       body: JSON.stringify({
         ...item,
-        token: generateToken(item),
+        token: util.generateToken(item),
       }),
     }
   } catch (err) {
