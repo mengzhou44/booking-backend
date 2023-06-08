@@ -17,15 +17,14 @@ exports.handler = async (event) => {
       process.env.JWT_SECRET
     )
 
-    console.log('step1')
     console.log({ user_name, user_id, email })
 
     if (!user_id || !user_name || !email) {
       throw new Error('invlaid token!')
     }
-    console.log('step2')
+ 
     const found = await getUserByEmail(email)
-    console.log({ found })
+
     if (
       found === null ||
       found.user_id !== user_id ||
@@ -34,17 +33,19 @@ exports.handler = async (event) => {
       throw new Error('invalid token!')
     }
 
-    console.log('step3')
-    return {
+    const result =  {
       ...generateAuthResponse(principalId, 'Allow', methodArn),
       context: {
         app_user_id: user_id,
         app_user_name: user_name,
         email,
-      },
+      }
     }
+    console.log({result})
+    return result; 
+
   } catch (error) {
-    console.error('Invalid token', error)
+    console.error(error)
     return generateAuthResponse(principalId, 'Deny', methodArn)
   }
 }
