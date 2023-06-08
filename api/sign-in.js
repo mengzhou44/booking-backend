@@ -57,6 +57,7 @@ async function getUserByEmail(email) {
 
   try {
     const data = await dynamodb.get(params).promise()
+    
     if (data.Item) {
       return data.Item
     } else {
