@@ -76,7 +76,6 @@ async function checkEmailExists(email) {
 
   try {
     const data = await dynamodb.query(params).promise()
-
     if (data.Items.length > 0) {
       console.log('Email exists')
       return true
