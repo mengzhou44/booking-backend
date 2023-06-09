@@ -15,6 +15,8 @@ const tableName = process.env.NOTES_TABLE;
 exports.handler = async (event) => {
     try {
         let item = JSON.parse(event.body);
+        console.log({item})
+        console.log(event.body)
         item.user_id = getUserId(event);
         item.user_name = getUserName(event);
         item.email= getEmail(event)
