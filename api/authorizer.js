@@ -42,7 +42,7 @@ exports.handler = async (event) => {
       }
     }
     console.log('step1')
-    console.log({result})
+    console.log(JSON.stringify(result, null, 4))
     return result; 
 
   } catch (error) {
