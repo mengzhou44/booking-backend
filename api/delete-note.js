@@ -30,8 +30,6 @@ exports.handler = async (event) => {
             body: JSON.stringify({message: "note is deleted successfully!"})
         };
     } catch (err) {
-      
-        console.log("Error", err);
         return {
             statusCode: err.statusCode ? err.statusCode : 500,
             headers: util.getResponseHeaders(),
