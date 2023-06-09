@@ -198,6 +198,8 @@ resources:
               - AttributeName: note_id
                 KeyType: HASH
             Projection:
+
+            
               ProjectionType: ALL
             ProvisionedThroughput:
               ReadCapacityUnits: 1

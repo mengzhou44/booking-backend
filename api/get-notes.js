@@ -17,6 +17,7 @@ exports.handler = async (event) => {
         let limit = query && query.limit ? parseInt(query.limit) : 5;
         let user_id = util.getUserId(event);
  
+        throw new Error('Error occured here!')
         let params = {
             TableName: tableName,
             KeyConditionExpression: "user_id = :uid",
