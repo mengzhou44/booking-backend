@@ -12,7 +12,7 @@ const tableName = process.env.NOTES_TABLE;
 
 exports.handler = async (event) => {
     try {
-        console.log('step1')
+       
         let timestamp = parseInt(event.pathParameters.timestamp);
         let params = {
             TableName: tableName,
@@ -23,7 +23,7 @@ exports.handler = async (event) => {
         };
      
         await dynamodb.delete(params).promise();
-        console.log('step3')
+ 
         return {
             statusCode: 200,
             headers: util.getResponseHeaders(),

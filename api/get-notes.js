@@ -16,8 +16,7 @@ exports.handler = async (event) => {
         let query = event.queryStringParameters;
         let limit = query && query.limit ? parseInt(query.limit) : 5;
         let user_id = util.getUserId(event);
-        console.log('step1')
-        console.log({user_id})
+ 
         let params = {
             TableName: tableName,
             KeyConditionExpression: "user_id = :uid",
@@ -27,7 +26,7 @@ exports.handler = async (event) => {
             Limit: limit,
             ScanIndexForward: false
         };
-        console.log('step2')
+ 
 
         let startTimestamp = query && query.start ? parseInt(query.start) : 0;
 
@@ -39,16 +38,14 @@ exports.handler = async (event) => {
         }
 
         let data = await dynamodb.query(params).promise();
-        console.log('step3')
-        console.log(JSON.stringify(data,null,4)) 
+
         return {
             statusCode: 200,
             headers: util.getResponseHeaders(),
             body: JSON.stringify(data)
         };
     } catch (err) {
-        console.log("Error", err);
-        console.log('step 4')
+ 
         return {
             statusCode: err.statusCode ? err.statusCode : 500,
             headers: util.getResponseHeaders(),

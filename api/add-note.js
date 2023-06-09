@@ -6,7 +6,7 @@ const AWS = require('aws-sdk');
 AWS.config.update({ region:  process.env.REGION});
 
 const { v4: uuidv4}  = require('uuid');
-const {getTimeStamp, getExpireTimeStamp,getUserId, getUserName, getEmail,  getResponseHeaders } = require('./util');
+const {getTimeStamp, getExpireTimeStamp,getUserId, getUserName, getUserEmail,  getResponseHeaders } = require('./util');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.NOTES_TABLE;
@@ -19,7 +19,7 @@ exports.handler = async (event) => {
         console.log(event.body)
         item.user_id = getUserId(event);
         item.user_name = getUserName(event);
-        item.email= getEmail(event)
+        item.email= getUserEmail(event)
         item.note_id = item.user_id + ':' + uuidv4()
         item.timestamp =  getTimeStamp()
         item.expires = getExpireTimeStamp()
