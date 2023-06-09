@@ -22,6 +22,8 @@ exports.handler = async (event) => {
             }
         };
      
+        throw new Error('Error occured!')
+        
         await dynamodb.delete(params).promise();
  
         return {
