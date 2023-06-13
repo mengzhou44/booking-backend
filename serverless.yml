@@ -5,8 +5,11 @@ frameworkVersion: '3.32'
 plugins:
   - serverless-offline
   - serverless-domain-manager
+  - serverless-bundle
 
 custom:
+  bundle:
+    linting: false
   allowedHeaders:
     - Accept
     - Content-Type
@@ -37,12 +40,17 @@ provider:
     NOTES_TABLE: ${self:service}-notes-${opt:stage, self:provider.stage}
     USERS_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
     REGION: ca-central-1
-    ACCOUNT_ID: 681206886478
     MAGIC_SECRET_KEY: sk_live_996CF8DA2DCB8FE0
     JWT_SECRET: 3yreirhscbsuhw2313333*&
   iam:
     role:
       statements:
+       - Effect: Allow
+         Action:
+          - s3:GetObject
+          - s3:PutObject
+         Resource: 
+          - "arn:aws:s3:::meng-notes-images/*"
        - Effect: Allow
          Action:
           - dynamodb:Query
@@ -143,9 +151,29 @@ functions:
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
-
+  upload-image:
+    handler: api/upload-image.handler
+    description: POST /image/upload
+    events:
+      - http:
+          path: image/upload
+          method: POST
+          authorizer: 
+            name: authorizer
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
 resources:
   Resources:
+    S3Bucket:
+      Type: AWS::S3::Bucket
+      DeletionPolicy : Retain
+      Properties:
+        BucketName: meng-notes-images
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
     UsersTable:
       Type: AWS::DynamoDB::Table
       DeletionPolicy: Retain
@@ -188,7 +216,7 @@ resources:
           - AttributeName: user_id
             KeyType: HASH
           - AttributeName: timestamp
-            KeyType: RANGE
+            KeyType: RANGE 
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
@@ -197,9 +225,7 @@ resources:
             KeySchema:
               - AttributeName: note_id
                 KeyType: HASH
-            Projection:
-
-            
+            Projection:            
               ProjectionType: ALL
             ProvisionedThroughput:
               ReadCapacityUnits: 1

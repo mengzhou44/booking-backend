@@ -1,17 +1,17 @@
 /**
  * Route: GET /note/n/{note_id}
  */
+import  _  from 'underscore';
+import util from './util';
 
-const AWS = require('aws-sdk');
+import  AWS from 'aws-sdk';
 AWS.config.update({ region:  process.env.REGION});
 
-const _ = require('underscore');
-const util = require('./util');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.NOTES_TABLE;
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
     try {
         let note_id = decodeURIComponent(event.pathParameters.note_id);
 

@@ -1,11 +1,11 @@
 /**
  * Route: POST /signup
  */
-const { v4: uuidv4 } = require('uuid')
-const { Magic } = require('@magic-sdk/admin')
-const util = require('./util')
+import { v4 as  uuidv4 } from 'uuid'
+import  { Magic } from '@magic-sdk/admin'
+import  util  from './util'
+import AWS  from 'aws-sdk'
 
-const AWS = require('aws-sdk')
 AWS.config.update({ region: process.env.REGION })
 
 const dynamodb = new AWS.DynamoDB.DocumentClient()

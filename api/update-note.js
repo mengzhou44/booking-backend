@@ -1,15 +1,14 @@
 /**
  * Route: PATCH /note
  */
-
-const AWS = require('aws-sdk');
+import util from './util';
+import AWS from 'aws-sdk';
 AWS.config.update({ region:  process.env.REGION});
-const util = require('./util');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.NOTES_TABLE;
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
     try {
         let item = JSON.parse(event.body).Item;
         item.user_id = util.getUserId(event);

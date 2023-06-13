@@ -2,21 +2,20 @@
  * Route: POST /note
  */
 
-const AWS = require('aws-sdk');
-AWS.config.update({ region:  process.env.REGION});
+import AWS  from  'aws-sdk';
+import  { v4 as  uuidv4}  from 'uuid';
+import {getTimeStamp, getExpireTimeStamp,getUserId, getUserName, getUserEmail,  getResponseHeaders }  from './util';
 
-const { v4: uuidv4}  = require('uuid');
-const {getTimeStamp, getExpireTimeStamp,getUserId, getUserName, getUserEmail,  getResponseHeaders } = require('./util');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.NOTES_TABLE;
  
+AWS.config.update({ region:  process.env.REGION});
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
     try {
         let item = JSON.parse(event.body);
-        console.log({item})
-        console.log(event.body)
+    
         item.user_id = getUserId(event);
         item.user_name = getUserName(event);
         item.email= getUserEmail(event)

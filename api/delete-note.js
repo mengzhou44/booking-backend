@@ -1,16 +1,14 @@
 /**
  * Route: DELETE /note/t/{timestamp}
  */
-
-const AWS = require('aws-sdk');
+import AWS from  'aws-sdk';
+import util from './util';
 AWS.config.update({ region:  process.env.REGION});
-
-const util = require('./util');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.NOTES_TABLE;
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
     try {
        
         let timestamp = parseInt(event.pathParameters.timestamp);

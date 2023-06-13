@@ -4,7 +4,7 @@
   "description": "",
   "main": "handler.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "sls deploy -s prod"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@magic-sdk/admin": "^1.10.0",
     "aws-sdk": "^2.1390.0",
+    "busboy": "^1.6.0",
     "jsonwebtoken": "^9.0.0",
     "jwt-decode": "^3.1.2",
     "luxon": "^3.3.0",
@@ -20,6 +21,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "serverless-bundle": "^6.0.0",
     "serverless-domain-manager": "^7.0.4"
   }
 }

@@ -1,47 +1,38 @@
-const { DateTime, Duration } = require('luxon')
-const   jwt  = require('jsonwebtoken')
+import  { DateTime, Duration }  from 'luxon'
+import jwt  from 'jsonwebtoken'
 
-const getTimeStamp = () => {
+export const getTimeStamp = () => {
   const date = DateTime.now()
   return date.toMillis()
 }
 
-const getExpireTimeStamp = () => {
+export const getExpireTimeStamp = () => {
   const duration = Duration.fromObject({ days: 90 })
 
   const date = DateTime.now().plus(duration)
   return date.toMillis()
 }
 
-const getUserId = (event) => {
+export const getUserId = (event) => {
   return event.requestContext.authorizer.app_user_id
 }
 
-const getUserName = (event) => {
+export const getUserName = (event) => {
   return event.requestContext.authorizer.app_user_name
 }
 
-const getUserEmail = (event) => {
+export const getUserEmail = (event) => {
   return event.requestContext.authorizer.email
 }
 
 
-const getResponseHeaders = () => {
+export const getResponseHeaders = () => {
   return {
     'Access-Control-Allow-Origin': '*',
   }
 }
 
-const generateToken = ( {user_id, user_name, email } )=> {
+export const generateToken = ( {user_id, user_name, email } )=> {
     return jwt.sign({user_id, user_name, email }, process.env.JWT_SECRET)
 }
-
-module.exports = {
-  getTimeStamp,
-  getExpireTimeStamp,
-  getUserId,
-  getUserEmail, 
-  getUserName,
-  getResponseHeaders,
-  generateToken
-}
+ 

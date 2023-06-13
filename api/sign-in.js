@@ -1,10 +1,10 @@
 /**
  * Route: POST /signin
  */
-const { Magic } = require('@magic-sdk/admin')
-const util = require('./util')
+import  { Magic } from '@magic-sdk/admin'
+import  util  from './util'
+import AWS  from 'aws-sdk'
 
-const AWS = require('aws-sdk')
 AWS.config.update({ region: process.env.REGION })
 
 const magicAdmin = new Magic(process.env.MAGIC_SECRET_KEY)
@@ -12,20 +12,24 @@ const magicAdmin = new Magic(process.env.MAGIC_SECRET_KEY)
 const dynamodb = new AWS.DynamoDB.DocumentClient()
 const tableName = process.env.USERS_TABLE
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   try {
     const { email, didToken } = JSON.parse(event.body)
+    console.log('step1')
     const didTokenMetadata = await magicAdmin.users.getMetadataByToken(didToken)
 
     if (!didTokenMetadata) {
       throw new Error('Sign in failed - Invalid token.')
     }
+    console.log('step2')
 
     if (didTokenMetadata.email !== email) {
       throw new Error('Sign in failed - Invalid email.')
     }
+    console.log('step3')
     const item = await getUserByEmail(email)
 
+    console.log('step4')
     return {
       statusCode: 200,
       headers: util.getResponseHeaders(),

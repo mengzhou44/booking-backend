@@ -1,11 +1,12 @@
-const jwt = require('jsonwebtoken')
-const AWS = require('aws-sdk')
+import jwt from 'jsonwebtoken'
+import  AWS from 'aws-sdk'
+
 AWS.config.update({ region: process.env.REGION })
 
 const dynamodb = new AWS.DynamoDB.DocumentClient()
 const tableName = process.env.USERS_TABLE
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   const token = event.authorizationToken
   const methodArn = event.methodArn
   const principalId = 'user'

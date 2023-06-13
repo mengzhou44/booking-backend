@@ -1,11 +1,10 @@
 /**
  * Route: GET /notes
  */
+import util from './util';
 
-const AWS = require('aws-sdk');
+import  AWS  from 'aws-sdk';
 AWS.config.update({ region:  process.env.REGION});
-
-const util = require('./util');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.NOTES_TABLE;
@@ -16,8 +15,6 @@ exports.handler = async (event) => {
         let query = event.queryStringParameters;
         let limit = query && query.limit ? parseInt(query.limit) : 5;
         let user_id = util.getUserId(event);
- 
-        
         let params = {
             TableName: tableName,
             KeyConditionExpression: "user_id = :uid",
