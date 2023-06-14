@@ -15,7 +15,6 @@ const tableName = process.env.USERS_TABLE
 export const handler = async (event) => {
   try {
     const { email, didToken } = JSON.parse(event.body)
-    console.log('step1')
     const didTokenMetadata = await magicAdmin.users.getMetadataByToken(didToken)
 
     if (!didTokenMetadata) {

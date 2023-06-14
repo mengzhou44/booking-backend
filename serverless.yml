@@ -1,4 +1,4 @@
-service: sls-notes-backend
+service: easyexpress-backend
 configValidationMode: error
 frameworkVersion: '3.32'
 
@@ -36,215 +36,31 @@ provider:
   memorySize: 128
   timeout: 10
   endpointType: regional
-  apiGateway:
-    binaryMediaTypes:
-      - '*/*'
   environment:
-    NOTES_TABLE: ${self:service}-notes-${opt:stage, self:provider.stage}
-    USERS_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
     REGION: ca-central-1
-    S3_BUCKET: meng-notes-images
-    MAGIC_SECRET_KEY: sk_live_996CF8DA2DCB8FE0
-    JWT_SECRET: 3yreirhscbsuhw2313333*&
+    FROM_EMAIL: mengzhouaws@gmail.com
   iam:
     role:
       statements:
         - Effect: Allow
           Action:
-            - s3:GetObject
-            - s3:PutObject
-          Resource:
-            - 'arn:aws:s3:::meng-notes-images/*'
-        - Effect: Allow
-          Action:
-            - dynamodb:Query
-            - dynamodb:GetItem
-            - dynamodb:PutItem
-            - dynamodb:DeleteItem
-          Resource:
-            - arn:aws:dynamodb:${self:provider.environment.REGION}:*:table/*
-        - Effect: Allow
-          Action:
-            - cloudfront:UpdateDistribution
+            - ses:SendEmail
+            - ses:SendRawEmail 
           Resource: '*'
-
 functions:
-  authorizer:
-    handler: api/authorizer.handler
-    description: Authenticate token, grant IAM permissions if valid.
-  sign-in:
-    handler: api/sign-in.handler
-    description: sign in
+  send-email:
+    handler: api/send-email.handler
+    description: send email
     events:
       - http:
-          path: signin
+          path: /email
           method: post
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
-  sign-up:
-    handler: api/sign-up.handler
-    description: sign up
-    events:
-      - http:
-          path: signup
-          method: post
-          cors:
-            origin: '*'
-            headers: ${self:custom.allowedHeaders}
-  add-note:
-    handler: api/add-note.handler
-    description: POST /note
-    events:
-      - http:
-          path: note
-          method: post
-          authorizer:
-            name: authorizer
-          cors:
-            origin: '*'
-            headers: ${self:custom.allowedHeaders}
-
-  update-note:
-    handler: api/update-note.handler
-    description: PATCH /note
-    events:
-      - http:
-          path: note
-          method: patch
-          authorizer:
-            name: authorizer
-          cors:
-            origin: '*'
-            headers: ${self:custom.allowedHeaders}
-  get-notes:
-    handler: api/get-notes.handler
-    description: GET /notes
-    events:
-      - http:
-          path: notes
-          method: get
-          authorizer:
-            name: authorizer
-          cors:
-            origin: '*'
-            headers: ${self:custom.allowedHeaders}
-
-  get-note:
-    handler: api/get-note.handler
-    description: GET /note/n/{note_id}
-    events:
-      - http:
-          path: note/n/{note_id}
-          method: get
-          authorizer:
-            name: authorizer
-          cors:
-            origin: '*'
-            headers: ${self:custom.allowedHeaders}
-
-  delete-note:
-    handler: api/delete-note.handler
-    description: DELETE /note
-    events:
-      - http:
-          path: note/t/{timestamp}
-          method: delete
-          authorizer:
-            name: authorizer
-          cors:
-            origin: '*'
-            headers: ${self:custom.allowedHeaders}
-  upload-image:
-    handler: api/upload-image.handler
-    description: POST /upload
-    events:
-      - http:
-          path: upload
-          method: POST
-          authorizer:
-            name: authorizer
-          cors:
-            origin: '*'
-            headers: ${self:custom.allowedHeaders}
+   
 resources:
   Resources:
-    S3Bucket:
-      Type: AWS::S3::Bucket
-      DeletionPolicy: Retain
-      Properties:
-        BucketName: ${self:provider.environment.S3_BUCKET}
-        BucketEncryption:
-          ServerSideEncryptionConfiguration:
-            - ServerSideEncryptionByDefault:
-                SSEAlgorithm: AES256
-
-    S3BucketPolicy:
-      Type: AWS::S3::BucketPolicy
-      Properties:
-        Bucket: !Ref S3Bucket
-        PolicyDocument:
-          Statement:
-            - Effect: Allow
-              Principal: '*'
-              Action: s3:GetObject
-              Resource: 'arn:aws:s3:::meng-notes-images/*'
-    UsersTable:
-      Type: AWS::DynamoDB::Table
-      DeletionPolicy: Retain
-      Properties:
-        TableName: ${self:provider.environment.USERS_TABLE}
-        AttributeDefinitions:
-          - AttributeName: user_id
-            AttributeType: S
-          - AttributeName: email
-            AttributeType: S
-        KeySchema:
-          - AttributeName: user_id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        GlobalSecondaryIndexes:
-          - IndexName: email-index
-            KeySchema:
-              - AttributeName: email
-                KeyType: HASH
-            Projection:
-              ProjectionType: ALL
-            ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
-    NotesTable:
-      Type: AWS::DynamoDB::Table
-      DeletionPolicy: Retain
-      Properties:
-        TableName: ${self:provider.environment.NOTES_TABLE}
-        AttributeDefinitions:
-          - AttributeName: user_id
-            AttributeType: S
-          - AttributeName: timestamp
-            AttributeType: N
-          - AttributeName: note_id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: user_id
-            KeyType: HASH
-          - AttributeName: timestamp
-            KeyType: RANGE
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        GlobalSecondaryIndexes:
-          - IndexName: note_id-index
-            KeySchema:
-              - AttributeName: note_id
-                KeyType: HASH
-            Projection:
-              ProjectionType: ALL
-            ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
     GatewayResponseDefault4XX:
       Type: AWS::ApiGateway::GatewayResponse
       Properties:
