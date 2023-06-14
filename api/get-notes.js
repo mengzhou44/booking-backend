@@ -1,7 +1,7 @@
 /**
  * Route: GET /notes
  */
-import util from './util';
+import {getUserId, getResponseHeaders } from './util';
 
 import  AWS  from 'aws-sdk';
 AWS.config.update({ region:  process.env.REGION});
@@ -14,7 +14,7 @@ exports.handler = async (event) => {
        
         let query = event.queryStringParameters;
         let limit = query && query.limit ? parseInt(query.limit) : 5;
-        let user_id = util.getUserId(event);
+        let user_id =  getUserId(event);
         let params = {
             TableName: tableName,
             KeyConditionExpression: "user_id = :uid",
@@ -38,14 +38,14 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 200,
-            headers: util.getResponseHeaders(),
+            headers:  getResponseHeaders(),
             body: JSON.stringify(data)
         };
     } catch (err) {
  
         return {
             statusCode: err.statusCode ? err.statusCode : 500,
-            headers: util.getResponseHeaders(),
+            headers: getResponseHeaders(),
             body: JSON.stringify({
                 error: err.message ? err.message : "Unknown error"
             })

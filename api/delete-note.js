@@ -2,7 +2,7 @@
  * Route: DELETE /note/t/{timestamp}
  */
 import AWS from  'aws-sdk';
-import util from './util';
+import {getUserId, getResponseHeaders} from './util';
 AWS.config.update({ region:  process.env.REGION});
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
@@ -15,7 +15,7 @@ export const handler = async (event) => {
         let params = {
             TableName: tableName,
             Key: {
-                user_id: util.getUserId(event),
+                user_id: getUserId(event),
                 timestamp: timestamp
             }
         };
@@ -24,13 +24,13 @@ export const handler = async (event) => {
  
         return {
             statusCode: 200,
-            headers: util.getResponseHeaders(),
+            headers: getResponseHeaders(),
             body: JSON.stringify({message: "note is deleted successfully!"})
         };
     } catch (err) {
         return {
             statusCode: err.statusCode ? err.statusCode : 500,
-            headers: util.getResponseHeaders(),
+            headers: getResponseHeaders(),
             body: JSON.stringify({
                 error: err.message ? err.message : "Unknown error"
             })

@@ -3,7 +3,7 @@
  */
 import { v4 as  uuidv4 } from 'uuid'
 import  { Magic } from '@magic-sdk/admin'
-import  util  from './util'
+import {getResponseHeaders, generateToken}  from './util'
 import AWS  from 'aws-sdk'
 
 AWS.config.update({ region: process.env.REGION })
@@ -47,16 +47,16 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      headers: util.getResponseHeaders(),
+      headers: getResponseHeaders(),
       body: JSON.stringify({
         ...item,
-        token: util.generateToken(item),
+        token: generateToken(item),
       }),
     }
   } catch (err) {
     return {
       statusCode: err.statusCode ? err.statusCode : 500,
-      headers: util.getResponseHeaders(),
+      headers: getResponseHeaders(),
       body: JSON.stringify({
         error: err.message ? err.message : 'Unknown error',
       }),

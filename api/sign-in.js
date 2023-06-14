@@ -2,7 +2,7 @@
  * Route: POST /signin
  */
 import  { Magic } from '@magic-sdk/admin'
-import  util  from './util'
+import  {getResponseHeaders, generateToken } from './util'
 import AWS  from 'aws-sdk'
 
 AWS.config.update({ region: process.env.REGION })
@@ -32,17 +32,17 @@ export const handler = async (event) => {
     console.log('step4')
     return {
       statusCode: 200,
-      headers: util.getResponseHeaders(),
+      headers: getResponseHeaders(),
       body: JSON.stringify({
         ...item,
-        token: util.generateToken(item),
+        token: generateToken(item),
       }),
     }
   } catch (err) {
     console.log('Error', err)
     return {
       statusCode: err.statusCode ? err.statusCode : 500,
-      headers: util.getResponseHeaders(),
+      headers: getResponseHeaders(),
       body: JSON.stringify({
         error: err.message ? err.message : 'Unknown error',
       }),

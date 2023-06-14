@@ -2,7 +2,7 @@
  * Route: GET /note/n/{note_id}
  */
 import  _  from 'underscore';
-import util from './util';
+import {getResponseHeaders} from './util';
 
 import  AWS from 'aws-sdk';
 AWS.config.update({ region:  process.env.REGION});
@@ -29,20 +29,20 @@ export const handler = async (event) => {
         if(!_.isEmpty(data.Items)) {
             return {
                 statusCode: 200,
-                headers: util.getResponseHeaders(),
+                headers: getResponseHeaders(),
                 body: JSON.stringify(data.Items[0])
             };
         } else {
             return {
                 statusCode: 404,
-                headers: util.getResponseHeaders()
+                headers: getResponseHeaders()
             };
         }      
     } catch (err) {
         console.log("Error", err);
         return {
             statusCode: err.statusCode ? err.statusCode : 500,
-            headers: util.getResponseHeaders(),
+            headers: getResponseHeaders(),
             body: JSON.stringify({
                  error: err.message ? err.message : "Unknown error"
             })

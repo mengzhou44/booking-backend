@@ -1,7 +1,7 @@
 /**
  * Route: PATCH /note
  */
-import util from './util';
+import {getUserId ,getUserName, getExpireTimeStamp, getResponseHeaders } from './util';
 import AWS from 'aws-sdk';
 AWS.config.update({ region:  process.env.REGION});
 
@@ -11,9 +11,9 @@ const tableName = process.env.NOTES_TABLE;
 export const handler = async (event) => {
     try {
         let item = JSON.parse(event.body).Item;
-        item.user_id = util.getUserId(event);
-        item.user_name = util.getUserName(event);
-        item.expires = util.getExpireTimeStamp()
+        item.user_id = getUserId(event);
+        item.user_name = getUserName(event);
+        item.expires = getExpireTimeStamp()
 
         await dynamodb.put({
             TableName: tableName,
@@ -25,18 +25,18 @@ export const handler = async (event) => {
             ExpressionAttributeValues: {
                 ':t': item.timestamp
             }
-        }).promise();
+        }).promise(); 
 
         return {
             statusCode: 200,
-            headers: util.getResponseHeaders(),
+            headers: getResponseHeaders(),
             body: JSON.stringify(item)
         };
     } catch (err) {
         console.log("Error", err);
         return {
             statusCode: err.statusCode ? err.statusCode : 500,
-            headers: util.getResponseHeaders(),
+            headers: getResponseHeaders(),
             body: JSON.stringify({
                 error: err.message ? err.message : "Unknown error"
             })

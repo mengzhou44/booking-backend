@@ -1,42 +1,70 @@
-import  busboy from 'busboy'
-import util from './util'
-import  AWS  from 'aws-sdk'
-import  { v4 as  uuidv4 }  from 'uuid'
+import Busboy from 'busboy'
+import { getResponseHeaders } from './util'
+import AWS from 'aws-sdk'
+import { v4 as uuidv4 } from 'uuid'
 
 AWS.config.update({ region: process.env.REGION })
 const s3 = new AWS.S3()
 
-export const handler = async (event) => {
-  const bb = busboy({ headers: event.headers })
+exports.handler = async (event) => {
+ 
+  const bb = Busboy({ headers: event.headers });
 
-  bb.on('file', async (_, file, info) => {
-    const filename = info.filename
-    let s3FileName = `${uuidv4()}-${filename}`
-    try {
-      s3.upload(
-        {
-          Bucket: envVariables.S3_BUCKET,
-          Key: s3FileName,
-          Body: file,
-        },
-        (err, data) => {
-          if (err) {
-            return {
-              statusCode: err.statusCode ? err.statusCode : 500,
-              headers: util.getResponseHeaders(),
-              body: JSON.stringify({
-                error: err.message ? err.message : 'Unknown error',
-              }),
-            }
-          } else {
-            res.status(200).send({ url: data.Location })
-          }
+  const tempPromise =  new Promise((resolve, reject) => {
+    let fileData = null;
+
+    bb.on('file', (_, file, {filename}) => {
+      console.log('step1')
+      const uploadParams = {
+        Bucket: process.env.S3_BUCKET, // Replace with your S3 bucket name
+        Key: `${uuidv4()}-`+filename,
+        Body: file
+      };
+      console.log(uploadParams)
+      console.log('step2')
+      s3.upload(uploadParams, (err, data) => {
+        console.log({err})
+        if (err) {
+          console.error('Error uploading file:', err);
+          resolve({
+            statusCode: 500,
+            headers: getResponseHeaders(), 
+            body: JSON.stringify({ error: 'Error uploading file' }),
+          });
+
+        } else {
+            console.log('step3')
+          console.log('File uploaded:', data.Location);
+          fileData = data;
         }
-      )
-    } catch (e) {
-      res.status(500).send({ error: 'Error uploading the file' })
-    }
+      });
+    });
+
+    bb.on('finish', () => {
+      console.log('step4')
+      console.log({fileData})
+      if (fileData) {
+        console.log('step5')
+        resolve({
+          statusCode: 200,
+          headers: getResponseHeaders(), 
+          body: JSON.stringify({ imageUrl: fileData.Location }),
+        });
+      } else {     
+        console.log('step6')
+
+        resolve({
+            statusCode: 500,
+            headers: getResponseHeaders(), 
+            body: JSON.stringify({ error: 'No file uploaded' }),
+          });
+      }
+    });
+
+    bb.write(event.body, event.isBase64Encoded ? 'base64' : 'binary');
+    bb.end();
+    
   })
 
-  req.pipe(bb)
-}
+  return await tempPromise()
+};
