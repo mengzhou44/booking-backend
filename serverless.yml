@@ -1,4 +1,4 @@
-service: easyexpress-backend
+service: booking-backend
 configValidationMode: error
 frameworkVersion: '3.32'
 
@@ -22,7 +22,7 @@ custom:
     - app_user_id
     - app_user_name
   customDomain:
-    domainName: api.apiservice.live
+    domainName: booking.apiservice.live
     stage: ${self:provider.stage}
     basePath: 'v1'
     certificateName: apiservice.live
@@ -37,30 +37,127 @@ provider:
   timeout: 10
   endpointType: regional
   environment:
-    REGION: ca-central-1
+    EVENTS_TABLE: ${self:service}-events-${opt:stage, self:provider.stage}
+    USERS_TABLE: ${self:service}-users-${opt:stage, self:provider.stage}
+    REGION:  ${self:provider.region}
     FROM_EMAIL: mengzhouaws@gmail.com
+    TO_EMAIL: mengzhou44@gmail.com
+    JWT_SECRET: 3yreirhscbsuhw2313333*&
+    MAGIC_SECRET_KEY: sk_live_6B742606649173D5
   iam:
     role:
       statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:DeleteItem
+          Resource:
+            - arn:aws:dynamodb:${self:provider.environment.REGION}:*:table/*
         - Effect: Allow
           Action:
             - ses:SendEmail
             - ses:SendRawEmail 
           Resource: '*'
 functions:
-  send-email:
-    handler: api/send-email.handler
-    description: send email
+  authorizer:
+    handler: api/authorizer.handler
+    description: Authenticate token, grant IAM permissions if valid.
+  sign-in:
+    handler: api/sign-in.handler
+    description: sign in
     events:
       - http:
-          path: /email
+          path: signin
           method: post
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
-   
+  sign-up:
+    handler: api/sign-up.handler
+    description: sign up
+    events:
+      - http:
+          path: signup
+          method: post
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+  get-events:
+    handler: api/get-events.handler
+    description: get events
+    events:
+      - http:
+          path: events
+          method: get
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+  add-event:
+    handler: api/add-event.handler
+    description: add event
+    events:
+      - http:
+          path: events
+          method: post
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+  cancel-event:
+    handler: api/cancel-event.handler
+    description: DELETE /event
+    events:
+      - http:
+          path: event
+          method: delete
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
 resources:
   Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.USERS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: user_id
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: user_id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: email-index
+            KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+    EventsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.EVENTS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: company_code
+            AttributeType: S
+          - AttributeName: event_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: company_code
+            KeyType: HASH
+          - AttributeName: event_id
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
     GatewayResponseDefault4XX:
       Type: AWS::ApiGateway::GatewayResponse
       Properties:

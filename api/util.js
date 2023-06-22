@@ -1,17 +1,5 @@
-import  { DateTime, Duration }  from 'luxon'
 import jwt  from 'jsonwebtoken'
 
-export const getTimeStamp = () => {
-  const date = DateTime.now()
-  return date.toMillis()
-}
-
-export const getExpireTimeStamp = () => {
-  const duration = Duration.fromObject({ days: 90 })
-
-  const date = DateTime.now().plus(duration)
-  return date.toMillis()
-}
 
 export const getUserId = (event) => {
   return event.requestContext.authorizer.app_user_id

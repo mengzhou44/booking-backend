@@ -6,7 +6,7 @@ import  {getResponseHeaders, generateToken } from './util'
 import AWS  from 'aws-sdk'
 
 AWS.config.update({ region: process.env.REGION })
-
+// try a new deployment
 const magicAdmin = new Magic(process.env.MAGIC_SECRET_KEY)
 
 const dynamodb = new AWS.DynamoDB.DocumentClient()
@@ -20,15 +20,13 @@ export const handler = async (event) => {
     if (!didTokenMetadata) {
       throw new Error('Sign in failed - Invalid token.')
     }
-    console.log('step2')
 
     if (didTokenMetadata.email !== email) {
       throw new Error('Sign in failed - Invalid email.')
     }
-    console.log('step3')
+ 
     const item = await getUserByEmail(email)
 
-    console.log('step4')
     return {
       statusCode: 200,
       headers: getResponseHeaders(),

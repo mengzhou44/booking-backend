@@ -1,22 +1,22 @@
 /**
- * Route: DELETE /note/t/{timestamp}
+ * Route: DELETE /event/{event_id}
  */
 import AWS from  'aws-sdk';
-import {getUserId, getResponseHeaders} from './util';
+import { getResponseHeaders} from './util';
 AWS.config.update({ region:  process.env.REGION});
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
-const tableName = process.env.NOTES_TABLE;
+const tableName = process.env.EVENTS_TABLE;
 
 export const handler = async (event) => {
     try {
        
-        let timestamp = parseInt(event.pathParameters.timestamp);
+        let {event_id, company_code} = event.queryStringParameters
         let params = {
             TableName: tableName,
             Key: {
-                user_id: getUserId(event),
-                timestamp: timestamp
+                company_code,
+                event_id
             }
         };
          
@@ -25,7 +25,7 @@ export const handler = async (event) => {
         return {
             statusCode: 200,
             headers: getResponseHeaders(),
-            body: JSON.stringify({message: "note is deleted successfully!"})
+            body: JSON.stringify({message: "event is canceled successfully!"})
         };
     } catch (err) {
         return {
